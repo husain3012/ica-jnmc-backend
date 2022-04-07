@@ -1,8 +1,9 @@
+import cors from "cors";
 import express from "express";
 const router = express.Router();
 import authMiddleware from "../middleware/auth.middleware.js";
 import { createForm, deleteForm, getAllForms, getForm, updateForm } from "../controllers/form.controller.js";
-
+router.use(cors());
 router.post("/create", authMiddleware, createForm);
 router.delete("/delete/:id", authMiddleware, deleteForm);
 router.get("/getAll", getAllForms);

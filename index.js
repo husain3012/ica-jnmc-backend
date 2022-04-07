@@ -38,9 +38,10 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use("/api/user", cors(), userRoutes);
-app.use("/api/form", cors(), formRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/form", formRoutes);
 
 app.listen(process.env.PORT || 5000, () => {
   console.log(`Server started on port ${process.env.PORT || 5000}`);
 });
+
