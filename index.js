@@ -18,7 +18,7 @@ db.sync({
           email: process.env.ADMIN_EMAIL,
           password: process.env.ADMIN_PASSWORD,
           user_id: process.env.ADMIN_USER_ID,
-          level: 0
+          level: 0,
         });
         console.log("Default user created", defaultUser);
       }
@@ -30,6 +30,16 @@ app.use(urlencoded({ extended: false }));
 app.use(json());
 app.use(cors());
 app.use(morgan("dev"));
+
+app.use(function(req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
+
+
 
 app.get("/", (req, res) => {
   return res.json({
