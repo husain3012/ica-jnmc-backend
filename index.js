@@ -2,16 +2,15 @@ require("dotenv").config();
 
 const express = require("express");
 const morgan = require("morgan");
-const cors = require("cors");
 const userRoutes = require("./routes/user.routes");
 const formRoutes = require("./routes/form.routes");
 const db = require("./utils/database");
+const cors = require("cors");
 const { User } = require("./models");
 
+
 console.log(process.env.NODE_ENV);
-db.sync({
-  force: process.env.FORCE_SYNC === "true" ? true : false,
-})
+db.sync()
   .then(() => {
     User.findOne({ where: { email: process.env.ADMIN_EMAIL } }).then(async (user) => {
       if (!user) {
@@ -32,6 +31,7 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 
 app.get("/", (req, res) => {
