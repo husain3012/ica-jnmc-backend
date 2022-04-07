@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 import express, { urlencoded, json } from "express";
 import morgan from "morgan";
 import cors from "cors";
+const app = express();
+app.use(cors());
 import userRoutes from "./routes/user.routes.js";
 import formRoutes from "./routes/form.routes.js";
 import db from "./utils/database.js";
@@ -25,8 +27,7 @@ db.sync({
     });
   })
   .catch((err) => console.log(err));
-const app = express();
-app.use(cors());
+
 app.use(urlencoded({ extended: false }));
 app.use(json());
 app.use(morgan("dev"));
