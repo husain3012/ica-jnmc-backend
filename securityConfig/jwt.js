@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
 
 const getToken = async function (data) {
   let jwtSecretKey = process.env.APP_SECRET;
@@ -24,4 +24,4 @@ const Authenticate = async function (req, res, next) {
   }
 };
 
-export { Authenticate, getToken };
+module.exports = { Authenticate, getToken };

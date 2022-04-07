@@ -1,14 +1,13 @@
-import dotenv from "dotenv";
-import express, { urlencoded, json } from "express";
-import morgan from "morgan";
-import cors from "cors";
-const app = express();
-app.use(cors());
-import userRoutes from "./routes/user.routes.js";
-import formRoutes from "./routes/form.routes.js";
-import db from "./utils/database.js";
-import { User } from "./models/index.js";
-dotenv.config();
+require("dotenv").config();
+
+const express = require("express");
+const morgan = require("morgan");
+const cors = require("cors");
+const userRoutes = require("./routes/user.routes");
+const formRoutes = require("./routes/form.routes");
+const db = require("./utils/database");
+const { User } = require("./models");
+
 console.log(process.env.NODE_ENV);
 db.sync({
   force: process.env.FORCE_SYNC === "true" ? true : false,
@@ -28,9 +27,12 @@ db.sync({
   })
   .catch((err) => console.log(err));
 
-app.use(urlencoded({ extended: false }));
-app.use(json());
+const app = express();
+app.use(cors());
 app.use(morgan("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
 
 app.get("/", (req, res) => {
   return res.json({
@@ -44,4 +46,3 @@ app.use("/api/form", formRoutes);
 app.listen(process.env.PORT || 5000, () => {
   console.log(`Server started on port ${process.env.PORT || 5000}`);
 });
-

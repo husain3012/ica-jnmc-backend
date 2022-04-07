@@ -1,6 +1,6 @@
-import User from "./user.model.js";
-import Form from "./form.model.js";
+const User = require("./user.model.js");
+const Form = require("./form.model.js");
 // associate the User model with the Form model
 Form.belongsTo(User);
 
-export { User, Form };
+module.exports = { User, Form };

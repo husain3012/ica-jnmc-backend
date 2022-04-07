@@ -1,8 +1,8 @@
-import { User } from "../models/index.js";
-import { getToken } from "../securityConfig/jwt.js";
-import { Op } from "sequelize";
+const { User } = require("../models/index.js");
+const { getToken } = require("../securityConfig/jwt.js");
+const { Op } = require("sequelize");
 
-export const signupUser = async (req, res) => {
+const signupUser = async (req, res) => {
   // check if admin is trying to create a new user
   if (!req.user || req.user.level !== 0) {
     return res.status(401).send({
@@ -24,7 +24,7 @@ export const signupUser = async (req, res) => {
   });
 };
 
-export const updateUser = async (req, res) => {
+const updateUser = async (req, res) => {
   // check if admin is trying to update a user
   if (!req.user || req.user.level !== 0) {
     return res.status(401).send({
@@ -53,7 +53,7 @@ export const updateUser = async (req, res) => {
 };
 // auth controllers
 // login user
-export const login = async (req, res) => {
+const login = async (req, res) => {
   const { username, password } = req.body;
   console.log(req.body);
   const user = await User.findOne({
@@ -83,4 +83,9 @@ export const login = async (req, res) => {
       token,
     },
   });
+};
+module.exports = {
+  signupUser,
+  updateUser,
+  login,
 };

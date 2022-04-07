@@ -1,8 +1,6 @@
-import Sequelize from "sequelize";
-import dotenv from "dotenv";
-dotenv.config();
+const Sequelize = require("sequelize");
 
 // using postgres;
 console.log("process.env.DATABASE_URL: ", process.env.DATABASE_URL);
 const sequelize = new Sequelize(process.env.DATABASE_URL);
-export default sequelize;
+module.exports = sequelize;

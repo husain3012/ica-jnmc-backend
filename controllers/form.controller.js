@@ -1,8 +1,8 @@
-import { Form, User } from "../models/index.js";
-import { Op } from "sequelize";
-import dayjs from "dayjs";
+const { Form, User } = require("../models/index.js");
+const { Op } = require("sequelize");
+const dayjs = require("dayjs");
 
-export const createForm = async (req, res) => {
+const createForm = async (req, res) => {
   const { reportingTime } = req.body;
   // next visit date
   const firstVisit = dayjs(reportingTime).add(1.5, "month").format("YYYY-MM-DD");
@@ -26,8 +26,7 @@ export const createForm = async (req, res) => {
     newForm,
   });
 };
-
-export const updateForm = async (req, res) => {
+const updateForm = async (req, res) => {
   const { id } = req.params;
   const form = await Form.findOne({ where: { id } });
   if (!form) {
@@ -45,7 +44,7 @@ export const updateForm = async (req, res) => {
   });
 };
 
-export const deleteForm = async (req, res) => {
+const deleteForm = async (req, res) => {
   const { id } = req.params;
   const form = await Form.findOne({ where: { id } });
   if (!form) {
@@ -58,7 +57,7 @@ export const deleteForm = async (req, res) => {
     message: "Form deleted",
   });
 };
-export const getForm = async (req, res) => {
+const getForm = async (req, res) => {
   const { id } = req.params;
   const form = await Form.findOne({ where: { id } });
   console.log(form);
@@ -69,7 +68,7 @@ export const getForm = async (req, res) => {
   }
   return res.status(200).json(form);
 };
-export const getAllForms = async (req, res) => {
+const getAllForms = async (req, res) => {
   const { currentPage, pageSize } = req.query;
   const searchQuery = {
     order: [["createdAt", "DESC"]],
@@ -89,4 +88,12 @@ export const getAllForms = async (req, res) => {
 
   const forms = await Form.findAll(searchQuery);
   return res.status(200).json(forms);
+};
+
+module.exports = {
+  createForm,
+  updateForm,
+  deleteForm,
+  getForm,
+  getAllForms,
 };

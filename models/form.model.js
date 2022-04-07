@@ -1,5 +1,5 @@
-import Sequelize from "sequelize";
-import sequelize from "../utils/database.js";
+const Sequelize = require("sequelize");
+const sequelize = require("../utils/database.js");
 const form = sequelize.define("form", {
   form: {
     type: Sequelize.JSONB,
@@ -15,4 +15,4 @@ const form = sequelize.define("form", {
     type: Sequelize.DATE,
   },
 });
-export default form;
+module.exports = form;
