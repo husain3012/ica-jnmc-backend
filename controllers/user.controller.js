@@ -67,6 +67,7 @@ const login = async (req, res) => {
       message: "Invalid credentials",
     });
   }
+  
   const token = await getToken({
     id: user.id,
     user_id: user.user_id,
