@@ -1,7 +1,7 @@
 const { Form, User } = require("../models/index.js");
 const { Op } = require("sequelize");
 const dayjs = require("dayjs");
-const sendMail =require("../utils/sendMail")
+const {sendEmail} =require("../utils/sendMail")
 
 const createForm = async (req, res) => {
   const { reportingTime } = req.body;
@@ -21,7 +21,7 @@ const createForm = async (req, res) => {
     },
   });
   await newForm.setUser(findUser);
-  sendMail('husainshahidrao@gmail.com', 'New Form', 'New Form has been created')
+  sendEmail('husainshahidrao@gmail.com', 'New Form', 'New Form has been created')
 
   return res.status(201).json({
     message: "Form created",

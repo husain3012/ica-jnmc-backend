@@ -1,16 +1,23 @@
-const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const nodeMailer = require("nodemailer");
+// nodemailer config gmail
+const transporter = nodeMailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_PASSWORD,
+  },
+});
 
-const sendScheduledEmail = async (email, subject, message) => {
-  const today = new Date();
+// function to send email
+const sendEmail = async (email, subject, message) => {
   const msg = {
     to: email,
-    from: process.env.SENDGRID_SENDER_EMAIL,
+    from: process.env.GMAIL_USER,
     subject: subject,
     text: message,
   };
   try {
-    const resp = await sgMail.send(msg);
+    const resp = await transporter.sendMail(msg);
     console.log(resp);
     return resp;
   } catch (error) {
@@ -19,4 +26,6 @@ const sendScheduledEmail = async (email, subject, message) => {
   }
 };
 
-module.exports = sendScheduledEmail;
+module.exports = {
+  sendEmail,
+};
