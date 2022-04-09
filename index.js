@@ -7,7 +7,7 @@ const formRoutes = require("./routes/form.routes");
 const db = require("./utils/database");
 const cors = require("cors");
 const { User } = require("./models");
-
+const emailReminders = require("./utils/reminderMail");
 
 
 console.log(process.env.NODE_ENV);
@@ -59,3 +59,7 @@ app.listen(process.env.PORT || 5000, () => {
   console.log(`Server started on port ${process.env.PORT || 5000}`);
 });
 
+if(process.env.EMAIL_REMINDERS === "true"){
+  console.log("Email reminders are enabled");
+  emailReminders.start();
+}
