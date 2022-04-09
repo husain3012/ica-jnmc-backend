@@ -3,6 +3,7 @@ const axios = require("axios");
 const sendMail = require("../utils/sendMail");
 
 const preventSLeep = async () => {
+  return;
   const sleepTime = process.env.SLEEP_TIME;
   if (sleepTime && sleepTime >= 60000) {
     const refreshInterval = setInterval(async () => {
