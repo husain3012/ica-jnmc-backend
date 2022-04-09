@@ -21,7 +21,19 @@ db.sync()
           user_id: process.env.ADMIN_USER_ID,
           level: 0,
         });
-        console.log("Default user created", defaultUser);
+        console.log("Default Admin created", defaultUser);
+      }
+    });
+    // create guest login user
+    User.findOne({ where: { user_id: "guest" } }).then(async (user) => {
+      if (!user) {
+        const defaultUser = await User.create({
+          email: "guest@guest.com",
+          password: "guest",
+          user_id: "guest",
+          level: 4,
+        });
+        console.log("Guest user created", defaultUser);
       }
     });
   })
@@ -33,7 +45,6 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-
 
 app.get("/", (req, res) => {
   return res.json({
