@@ -8,7 +8,7 @@ const db = require("./utils/database");
 const cors = require("cors");
 const { User } = require("./models");
 
-const preventSLeep = require("./utils/preventSleep");
+
 
 console.log(process.env.NODE_ENV);
 db.sync()
@@ -59,5 +59,3 @@ app.listen(process.env.PORT || 5000, () => {
   console.log(`Server started on port ${process.env.PORT || 5000}`);
 });
 
-// prevent sleep
-preventSLeep();
