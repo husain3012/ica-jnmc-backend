@@ -10,7 +10,6 @@ const cors = require("cors");
 const { User, Settings } = require("./models");
 const { emailReminders } = require("./utils/reminderMail");
 
-console.log(process.env.NODE_ENV);
 db.sync()
   .then(async () => {
     await User.findOne({ where: { email: process.env.ADMIN_EMAIL } }).then(async (user) => {

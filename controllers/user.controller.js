@@ -55,7 +55,7 @@ const updateUser = async (req, res) => {
 // login user
 const login = async (req, res) => {
   const { username, password } = req.body;
-  console.log(req.body);
+
   const user = await User.findOne({
     where: {
       password: password,

@@ -18,7 +18,6 @@ const sendEmail = async ({ email, subject, message, html }) => {
   };
   try {
     const resp = await transporter.sendMail(msg);
-    console.log(resp);
     return resp;
   } catch (error) {
     console.log(error);

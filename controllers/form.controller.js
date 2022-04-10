@@ -78,7 +78,7 @@ const deleteForm = async (req, res) => {
 const getForm = async (req, res) => {
   const { id } = req.params;
   const form = await Form.findOne({ where: { id } });
-  console.log(form);
+
   if (!form) {
     return res.status(404).send({
       message: "Form not found",
