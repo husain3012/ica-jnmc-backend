@@ -1,10 +1,10 @@
-const { Form, User } = require("../models/index.js");
+const { Form, User, Reminder } = require("../models/index.js");
 const { Op } = require("sequelize");
 const dayjs = require("dayjs");
 const { sendEmail } = require("../utils/sendMail");
 
 const createForm = async (req, res) => {
-  const { reportingTime, email, name } = req.body;
+  const { reportingTime, name } = req.body;
   // next visit date
   const firstVisit = dayjs(reportingTime).add(1.5, "month").format("YYYY-MM-DD");
   const secondVisit = dayjs(reportingTime).add(3, "month").format("YYYY-MM-DD");
@@ -35,7 +35,7 @@ const createForm = async (req, res) => {
     subject: `New Needle Stick Injury form by ${name}`,
     html: `
       <h1>New Needle Stick Injury form by ${name}</h1>
-      <p>${name} (${email}) has submitted a new Needle Stick Injury form. Please login to the application to view the form.</p>
+      <p>${name} (${req.user.email}) has submitted a new Needle Stick Injury form. Please login to the application to view the form.</p>
       `,
   });
 
@@ -108,10 +108,55 @@ const getAllForms = async (req, res) => {
   return res.status(200).json(forms);
 };
 
+const addReminder = async (req, res) => {
+  const { id } = req.params;
+  const { email, phoneNumber } = req.body;
+  const form = await Form.findOne({ where: { id } });
+  if (!form) {
+    return res.status(404).send({
+      message: "Form not found",
+    });
+  }
+  if (!email || email === "") {
+    return res.status(400).send({
+      message: "Email is required",
+    });
+  }
+  const firstVisit = await Reminder.create({
+    email,
+    phoneNumber,
+    sendAt:   form.firstVisit,
+    subject: "Needle Stick Injury, First Visit",
+    message: `Hi, ${form.form.name}! This is a reminder to attend your first visit, on ${dayjs(form.firstVisit).format("ddd, DD-MMM-YYYY")}.`,
+  });
+  const secondVisit = await Reminder.create({
+    email,
+    phoneNumber,
+    sendAt: form.secondVisit,
+    subject: "Needle Stick Injury, Second Visit",
+    message: `Hi, ${form.form.name}! This is a reminder to attend your second visit, on ${dayjs(form.secondVisit).format("ddd, DD-MMM-YYYY")}.`,
+  });
+
+  const thirdVisit = await Reminder.create({
+    email,
+    phoneNumber,
+    sendAt: form.thirdVisit,
+    subject: "Needle Stick Injury, Third Visit",
+    message: `Hi, ${form.form.name}! This is a reminder to attend your third visit, on ${dayjs(form.thirdVisit).format("ddd, DD-MMM-YYYY")}`,
+  });
+  return res.status(200).json({
+    message: "Reminders created",
+    firstVisit,
+    secondVisit,
+    thirdVisit,
+  });
+};
+
 module.exports = {
   createForm,
   updateForm,
   deleteForm,
   getForm,
   getAllForms,
+  addReminder,
 };
