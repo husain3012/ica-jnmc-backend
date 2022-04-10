@@ -5,7 +5,7 @@ const { sendEmail } = require("../utils/sendMail");
 const dayjs = require("dayjs");
 const emailReminders = cron.schedule(
   // send email reminder every sunday at random time between 8am and 10am
-    "0 0-10 * * 0",
+  "0 0-10 * * 0",
   async () => {
     // find users with visits this week
     console.log("running cron job");
@@ -33,13 +33,28 @@ const emailReminders = cron.schedule(
     // send email to users
 
     for (let i = 0; i < Math.min(firstVisits.length, 7); i++) {
-      await sendEmail(firstVisits[i].form.email, "Needle Injury First Visit", `Your first visit is scheduled for ${dayjs(firstVisits[i].firstVisit).format("DD-MMM-YYYY, ddd")}`);
+      const mailContent = {
+        email: firstVisits[i].form.email,
+        subject: `Needle Injury First Visit`,
+        message: `Your first visit is scheduled for ${dayjs(firstVisits[i].firstVisit).format("DD-MMM-YYYY, ddd")}`,
+      };
+      await sendEmail(mailContent);
     }
     for (let i = 0; i < Math.min(secondVisits.length, 7); i++) {
-      await sendEmail(secondVisits[i].form.email, "Needle Injury Second Visit", `Your second visit is scheduled for ${dayjs(secondVisits[i].secondVisit).format("DD-MMM-YYYY, ddd")}`);
+      const mailContent = {
+        email: secondVisits[i].form.email,
+        subject: `Needle Injury Second Visit`,
+        message: `Your second visit is scheduled for ${dayjs(secondVisits[i].secondVisit).format("DD-MMM-YYYY, ddd")}`,
+      };
+      await sendEmail(mailContent);
     }
     for (let i = 0; i < Math.min(thirdVisits.length, 7); i++) {
-      await sendEmail(thirdVisits[i].form.email, "Needle Injury Third Visit", `Your third visit is scheduled for ${dayjs(thirdVisits[i].thirdVisit).format("DD-MMM-YYYY, ddd")}`);
+      const mailContent = {
+        email: thirdVisits[i].form.email,
+        subject: `Needle Injury Third Visit`,
+        message: `Your third visit is scheduled for ${dayjs(thirdVisits[i].thirdVisit).format("DD-MMM-YYYY, ddd")}`,
+      };
+      await sendEmail(mailContent);
     }
   },
   {

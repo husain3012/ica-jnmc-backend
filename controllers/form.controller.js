@@ -1,10 +1,10 @@
 const { Form, User } = require("../models/index.js");
 const { Op } = require("sequelize");
 const dayjs = require("dayjs");
-const {sendEmail} =require("../utils/sendMail")
+const { sendEmail } = require("../utils/sendMail");
 
 const createForm = async (req, res) => {
-  const { reportingTime } = req.body;
+  const { reportingTime, email, name } = req.body;
   // next visit date
   const firstVisit = dayjs(reportingTime).add(1.5, "month").format("YYYY-MM-DD");
   const secondVisit = dayjs(reportingTime).add(3, "month").format("YYYY-MM-DD");
@@ -21,7 +21,14 @@ const createForm = async (req, res) => {
     },
   });
   await newForm.setUser(findUser);
-  sendEmail('husainshahidrao@gmail.com', 'New Form', 'New Form has been created')
+  sendEmail({
+    email: process.env.ADMIN_EMAIL,
+    subject: `New Needle Stick Injury form by ${name}`,
+    html: `
+      <h1>New Needle Stick Injury form by ${name}</h1>
+      <p>${name} (${email}) has submitted a new Needle Stick Injury form. Please login to the application to view the form.</p>
+      `,
+  });
 
   return res.status(201).json({
     message: "Form created",
