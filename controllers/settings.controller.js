@@ -1,7 +1,14 @@
 const { findAndSendReminders } = require("../utils/reminderMail");
 const { Settings } = require("../models");
+const { sendEmail } = require("../utils/sendMail");
 
 const sendReminders = async (req, res) => {
+  sendEmail({
+    email: "husainshahidrao@gmail.com",
+    subject: "Cron job",
+    message: "Cron job",
+  });
+
   const user = req.user;
   if (user.level !== 0) {
     res.status(401).send({ message: "Unauthorized" });
@@ -40,7 +47,7 @@ const disableEmailReminders = async (req, res) => {
 };
 
 module.exports = {
-    sendReminders,
-    enableEmailReminders,
-    disableEmailReminders,
+  sendReminders,
+  enableEmailReminders,
+  disableEmailReminders,
 };

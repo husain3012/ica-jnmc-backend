@@ -17,7 +17,8 @@ const findAndSendReminders = async () => {
   const reminders = await Reminder.findAll({
     where: {
       sendAt: {
-        [Op.lte]: dayjs().format("YYYY-MM-DD"),
+        [Op.lte]: new Date(),
+        // [Op.lte]: dayjs().format("YYYY-MM-DD"),
       },
     },
   });
@@ -37,9 +38,9 @@ const findAndSendReminders = async () => {
 
 const emailReminders = cron.schedule(
   // send email reminder every sunday at random time between 8am and 10am
-  cron_intervals.sunday_random_between_8_and_10,
+  // cron_intervals.sunday_random_between_8_and_10,
   // run every minute
-  // cron_intervals.every_minute,
+  cron_intervals.every_minute,
   async () => {
     await findAndSendReminders();
   },
