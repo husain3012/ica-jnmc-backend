@@ -4,16 +4,16 @@ const express = require("express");
 const morgan = require("morgan");
 const userRoutes = require("./routes/user.routes");
 const formRoutes = require("./routes/form.routes");
+const settingsRoutes = require("./routes/settings.routes");
 const db = require("./utils/database");
 const cors = require("cors");
-const { User } = require("./models");
-const emailReminders = require("./utils/reminderMail");
-
+const { User, Settings } = require("./models");
+const { emailReminders } = require("./utils/reminderMail");
 
 console.log(process.env.NODE_ENV);
 db.sync()
-  .then(() => {
-    User.findOne({ where: { email: process.env.ADMIN_EMAIL } }).then(async (user) => {
+  .then(async () => {
+    await User.findOne({ where: { email: process.env.ADMIN_EMAIL } }).then(async (user) => {
       if (!user) {
         const defaultUser = await User.create({
           email: process.env.ADMIN_EMAIL,
@@ -25,7 +25,7 @@ db.sync()
       }
     });
     // create guest login user
-    User.findOne({ where: { user_id: "guest" } }).then(async (user) => {
+    await User.findOne({ where: { user_id: "guest" } }).then(async (user) => {
       if (!user) {
         const defaultUser = await User.create({
           email: "guest@guest.com",
@@ -34,6 +34,19 @@ db.sync()
           level: 4,
         });
         console.log("Guest user created", defaultUser);
+      }
+    });
+    // create default settings
+    await Settings.findOne({ where: { createdBy: process.env.ADMIN_EMAIL } }).then(async (settings) => {
+      if (!settings) {
+        const defaultSettings = await Settings.create({
+          emailReminders: true,
+          whatsappReminders: true,
+          cronInterval: "daily",
+          serverCrons: true,
+          createdBy: process.env.ADMIN_EMAIL,
+        });
+        console.log("Default settings created", defaultSettings);
       }
     });
   })
@@ -54,12 +67,13 @@ app.get("/", (req, res) => {
 
 app.use("/api/user", userRoutes);
 app.use("/api/form", formRoutes);
+app.use("/api/settings", settingsRoutes);
 
 app.listen(process.env.PORT || 5000, () => {
   console.log(`Server started on port ${process.env.PORT || 5000}`);
 });
 
-if(process.env.EMAIL_REMINDERS === "true"){
-  console.log("Email reminders are enabled");
+if (process.env.EMAIL_REMINDERS === "true") {
+  console.log("Server crons enabled");
   emailReminders.start();
 }

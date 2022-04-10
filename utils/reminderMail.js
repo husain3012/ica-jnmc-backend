@@ -13,37 +13,42 @@ const cron_intervals = {
   every_third_day: "0 0 * * */3",
 };
 
+const findAndSendReminders = async () => {
+  const reminders = await Reminder.findAll({
+    where: {
+      sendAt: {
+        [Op.lte]: dayjs().format("YYYY-MM-DD"),
+      },
+    },
+  });
+  console.log(reminders);
+  // send email to each user and delete reminder
+  for (let reminder of reminders) {
+    const { email, phoneNumber, subject, message } = reminder;
+    sendEmail({
+      email,
+      subject,
+      message,
+    });
+    await reminder.destroy();
+  }
+  return reminders;
+};
+
 const emailReminders = cron.schedule(
   // send email reminder every sunday at random time between 8am and 10am
   cron_intervals.sunday_random_between_8_and_10,
   // run every minute
   // cron_intervals.every_minute,
   async () => {
-    // find users with visits this week
-    console.log("running cron job");
-    //  find reminders that are due today
-
-    const reminders = await Reminder.findAll({
-      where: {
-        sendAt: {
-          [Op.lte]: dayjs().format("YYYY-MM-DD"),
-        },
-      },
-    });
-    console.log(reminders);
-    // send email to each user and delete reminder
-    for (let reminder of reminders) {
-      const { email, phoneNumber, subject, message } = reminder;
-      sendEmail({
-        email,
-        subject,
-        message,
-      });
-      await reminder.destroy();
-    }
+    await findAndSendReminders();
   },
   {
     scheduled: false,
   }
 );
-module.exports = emailReminders;
+
+module.exports = {
+  emailReminders,
+  findAndSendReminders,
+};

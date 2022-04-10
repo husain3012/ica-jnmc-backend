@@ -5,8 +5,8 @@ const { createForm, deleteForm, getAllForms, getForm, updateForm,addReminder} = 
 
 router.post("/create", authMiddleware, createForm);
 router.delete("/delete/:id", authMiddleware, deleteForm);
-router.get("/getAll", getAllForms);
-router.get("/get/:id", getForm);
+router.get("/getAll", authMiddleware,getAllForms);
+router.get("/get/:id", authMiddleware,getForm);
 router.put("/update/:id", authMiddleware, updateForm);
 router.post("/reminder/:id", authMiddleware, addReminder);
 
