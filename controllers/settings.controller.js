@@ -3,17 +3,13 @@ const { Settings } = require("../models");
 const { sendEmail } = require("../utils/sendMail");
 
 const sendReminders = async (req, res) => {
-  sendEmail({
-    email: "husainshahidrao@gmail.com",
-    subject: "Cron job",
-    message: "Cron job",
-  });
 
   const user = req.user;
   if (user.level !== 0) {
     res.status(401).send({ message: "Unauthorized" });
   }
-  return await findAndSendReminders();
+  const sentReminders = await findAndSendReminders();
+  return res.json(sentReminders);
 };
 
 const enableEmailReminders = async (req, res) => {
