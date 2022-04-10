@@ -21,8 +21,17 @@ const createForm = async (req, res) => {
     },
   });
   await newForm.setUser(findUser);
+  // get email colums of admins
+
+  const admins = await User.findAll({
+    attributes: ["email"],
+    where: {
+      level: 0,
+    },
+  });
+  const adminEmails = admins.map((admin) => admin.email);
   sendEmail({
-    email: process.env.ADMIN_EMAIL,
+    email: adminEmails,
     subject: `New Needle Stick Injury form by ${name}`,
     html: `
       <h1>New Needle Stick Injury form by ${name}</h1>
