@@ -11,6 +11,7 @@ const cron_intervals = {
   sunday_random_between_8_and_10: "0 0 8-10 * * 0",
   daily_random_between_8_and_10: "0 0 8-10 * * *",
   every_third_day: "0 0 * * */3",
+  every_third_day_random_between_8_and_10: "0 0 8-10 */3 * *",
 };
 
 const findAndSendReminders = async () => {
@@ -37,7 +38,7 @@ const findAndSendReminders = async () => {
 
 const emailReminders = cron.schedule(
   // send email reminder every sunday at random time between 8am and 10am
-  cron_intervals.sunday_random_between_8_and_10,
+  cron_intervals.every_third_day_random_between_8_and_10,
   // run every minute for testing
   // cron_intervals.every_minute,
   async () => {
