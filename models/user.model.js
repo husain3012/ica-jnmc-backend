@@ -9,6 +9,10 @@ const user = sequelize.define("user", {
     type: Sequelize.INTEGER,
     defaultValue: 2,
   },
+  role: {
+    type: Sequelize.STRING,
+    defaultValue: "default",
+  },
   email: {
     type: Sequelize.STRING,
     allowNull: false,

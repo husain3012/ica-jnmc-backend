@@ -51,6 +51,23 @@ const updateUser = async (req, res) => {
     user,
   });
 };
+
+const getAllUsers = async (req, res) => {
+  // check if admin is trying to get all users
+  if (!req.user || req.user.level !== 0) {
+    return res.status(401).send({
+      message: "Unauthorized",
+    });
+  }
+  // get all users sorted by createdAt
+
+  const users = await User.findAll({
+    order: [["createdAt", "DESC"]],
+    attributes: ["id", "user_id", "email", "level", "role", "createdAt"],
+  });
+  return res.status(200).json(users);
+};
+
 // auth controllers
 // login user
 const login = async (req, res) => {
@@ -67,7 +84,7 @@ const login = async (req, res) => {
       message: "Invalid credentials",
     });
   }
-  
+
   const token = await getToken({
     id: user.id,
     user_id: user.user_id,
@@ -86,6 +103,7 @@ const login = async (req, res) => {
   });
 };
 module.exports = {
+  getAllUsers,
   signupUser,
   updateUser,
   login,
