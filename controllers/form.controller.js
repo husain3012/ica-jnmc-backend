@@ -21,7 +21,7 @@ const createForm = async (req, res) => {
     },
   });
   await newForm.setUser(findUser);
-  // get email colums of admins
+ 
 
   const admins = await User.findAll({
     attributes: ["email"],
@@ -35,7 +35,7 @@ const createForm = async (req, res) => {
     subject: `New Needle Stick Injury form by ${name}`,
     html: `
       <h1>New Needle Stick Injury form by ${name}</h1>
-      <p>${name} (${req.user.email}) has submitted a new Needle Stick Injury form. Please login to the application to view the form.</p>
+      <p>${name} (${req.user.email}) has submitted a new Needle Stick Injury form. Please login to the application to view the form, or <a target='_blank' rel='noreferrer' href='${process.env.APP_URL}/forms/needle-stick/${newForm.id}'>click here.</a></p>
       `,
   });
 
@@ -125,7 +125,7 @@ const addReminder = async (req, res) => {
   const firstVisit = await Reminder.create({
     email,
     phoneNumber,
-    sendAt:   new Date(),
+    sendAt: new Date(),
     subject: "Needle Stick Injury, First Visit",
     message: `Hi, ${form.form.name}! This is a reminder to attend your first visit, on ${dayjs(form.firstVisit).format("ddd, DD-MMM-YYYY")}.`,
   });

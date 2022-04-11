@@ -27,8 +27,8 @@ db.sync()
     await User.findOne({ where: { user_id: "guest" } }).then(async (user) => {
       if (!user) {
         const defaultUser = await User.create({
-          email: "guest@guest.com",
-          password: "guest",
+          email: process.env.GUEST_EMAIL,
+          password: process.env.GUEST_PASSWORD,
           user_id: "guest",
           level: 4,
         });
@@ -57,6 +57,12 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+// add mock delay to simulate slow network
+// app.use((req, res, next) => {
+//   setTimeout(next, 1000);
+// });
+
 
 app.get("/", (req, res) => {
   return res.json({

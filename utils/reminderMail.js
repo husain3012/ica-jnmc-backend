@@ -18,7 +18,7 @@ const findAndSendReminders = async () => {
     where: {
       sendAt: {
         // [Op.lte]: new Date(), // for testing
-        [Op.lte]: dayjs().format("YYYY-MM-DD"),
+        [Op.between]: [dayjs().toDate(), dayjs().add(3, "day").toDate()],
       },
     },
   });
