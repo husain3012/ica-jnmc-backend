@@ -10,7 +10,9 @@ const cors = require("cors");
 const { User, Settings } = require("./models");
 const { emailReminders } = require("./utils/reminderMail");
 
-db.sync()
+db.sync({
+  force: process.env.DROP_DATABASE === `DROP DATABASE ${db.config.database}`,
+})
   .then(async () => {
     await User.findOne({ where: { email: process.env.ADMIN_EMAIL } }).then(async (user) => {
       if (!user) {
