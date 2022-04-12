@@ -125,7 +125,7 @@ const addReminder = async (req, res) => {
   const firstVisit = await Reminder.create({
     email,
     phoneNumber,
-    sendAt: new Date(),
+    sendAt: form.firstVisit,
     subject: "Needle Stick Injury, First Visit",
     message: `Hi, ${form.form.name}! This is a reminder to attend your first visit, on ${dayjs(form.firstVisit).format("ddd, DD-MMM-YYYY")}.`,
   });
