@@ -4,11 +4,11 @@ const dayjs = require("dayjs");
 const { sendEmail } = require("../utils/sendMail");
 
 const createForm = async (req, res) => {
-  const { reportingTime, name } = req.body;
+  const { name, injuryTime } = req.body;
   // next visit date
-  const firstVisit = dayjs(reportingTime).add(1.5, "month").format("YYYY-MM-DD");
-  const secondVisit = dayjs(reportingTime).add(3, "month").format("YYYY-MM-DD");
-  const thirdVisit = dayjs(reportingTime).add(6, "month").format("YYYY-MM-DD");
+  const firstVisit = dayjs(injuryTime).add(1.5, "month").format("YYYY-MM-DD");
+  const secondVisit = dayjs(injuryTime).add(3, "month").format("YYYY-MM-DD");
+  const thirdVisit = dayjs(injuryTime).add(6, "month").format("YYYY-MM-DD");
   const newForm = await Form.create({
     form: req.body,
     firstVisit,
@@ -21,7 +21,6 @@ const createForm = async (req, res) => {
     },
   });
   await newForm.setUser(findUser);
- 
 
   const admins = await User.findAll({
     attributes: ["email"],
