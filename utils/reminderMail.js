@@ -18,8 +18,8 @@ const findAndSendReminders = async () => {
   const reminders = await Reminder.findAll({
     where: {
       sendAt: {
-        [Op.lte]: new Date(), // for testing
-        // [Op.between]: [dayjs().subtract(3, "day").toDate(), dayjs().add(3, "day").toDate()],
+        // [Op.lte]: new Date(), // for testing
+        [Op.between]: [dayjs().subtract(3, "day").toDate(), dayjs().add(3, "day").toDate()],
       },
     },
   });
