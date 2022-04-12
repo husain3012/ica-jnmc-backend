@@ -5,6 +5,8 @@ const { sendEmail } = require("../utils/sendMail");
 
 const createForm = async (req, res) => {
   const { name, injuryTime } = req.body;
+
+  console.log(req.body)
   // next visit date
   const firstVisit = dayjs(injuryTime).add(1.5, "month").format("YYYY-MM-DD");
   const secondVisit = dayjs(injuryTime).add(3, "month").format("YYYY-MM-DD");
@@ -121,13 +123,17 @@ const addReminder = async (req, res) => {
       message: "Email is required",
     });
   }
+  // add reminder to form
   const firstVisit = await Reminder.create({
     email,
     phoneNumber,
-    sendAt: form.firstVisit,
+    sendAt: new Date() || form.firstVisit,
     subject: "Needle Stick Injury, First Visit",
     message: `Hi, ${form.form.name}! This is a reminder to attend your first visit, on ${dayjs(form.firstVisit).format("ddd, DD-MMM-YYYY")}.`,
   });
+  await form.addReminder(firstVisit);
+
+
   const secondVisit = await Reminder.create({
     email,
     phoneNumber,
@@ -135,7 +141,7 @@ const addReminder = async (req, res) => {
     subject: "Needle Stick Injury, Second Visit",
     message: `Hi, ${form.form.name}! This is a reminder to attend your second visit, on ${dayjs(form.secondVisit).format("ddd, DD-MMM-YYYY")}.`,
   });
-
+  await form.addReminder(secondVisit);
   const thirdVisit = await Reminder.create({
     email,
     phoneNumber,
@@ -143,6 +149,7 @@ const addReminder = async (req, res) => {
     subject: "Needle Stick Injury, Third Visit",
     message: `Hi, ${form.form.name}! This is a reminder to attend your third visit, on ${dayjs(form.thirdVisit).format("ddd, DD-MMM-YYYY")}`,
   });
+  await form.addReminder(thirdVisit);
   return res.status(200).json({
     message: "Reminders created",
     firstVisit,
