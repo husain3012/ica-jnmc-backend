@@ -81,3 +81,5 @@ if (process.env.EMAIL_REMINDERS === "true") {
   console.log("Server crons enabled");
   emailReminders.start();
 }
+
+module.exports = app;
